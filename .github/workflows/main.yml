@@ -6,17 +6,14 @@ name: CI
 # events but only for the master branch
 on:
   push:
-<<<<<<< HEAD
     branches:
       - master
       - develop
     
-=======
     branches: 
      - master
      - develop
 
->>>>>>> e71494047a2e0ae957a9b30d269313272af7b0c6
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
