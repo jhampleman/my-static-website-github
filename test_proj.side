@@ -1,0 +1,50 @@
+{
+  "id": "c88adf06-4a11-4fc2-8717-368ae4a65788",
+  "version": "2.0",
+  "name": "test_proj",
+  "url": "https://preview.viasat.com/about-us/",
+  "tests": [{
+    "id": "2f33d2bd-0906-497e-9c32-8d2071c1ce55",
+    "name": "My first test",
+    "commands": [{
+      "id": "b478409e-e672-460c-b451-7ff3fd0c65a5",
+      "comment": "",
+      "command": "open",
+      "target": "https://preview.viasat.com/about-us/?v=2",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ca704df5-76c1-4f9b-88c6-f94a4aa68891",
+      "comment": "",
+      "command": "waitForElementPresent",
+      "target": "linkText=Change Region",
+      "targets": [
+        ["linkText=Change Region", "linkText"],
+        ["css=#btnModalLang > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Change Region')]", "xpath:link"],
+        ["xpath=//p[@id='btnModalLang']/a", "xpath:idRelative"],
+        ["xpath=(//a[contains(@href, '#')])[2]", "xpath:href"],
+        ["xpath=//div[2]/div/p/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Change Region')]", "xpath:innerText"]
+      ],
+      "value": "30000"
+    }, {
+      "id": "57dd33e5-1e18-4e92-bbf0-d370fe884dec",
+      "comment": "",
+      "command": "close",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "6cf7a383-3ead-413f-83c8-cd2f81904610",
+    "name": "Click Tests",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["2f33d2bd-0906-497e-9c32-8d2071c1ce55"]
+  }],
+  "urls": ["https://preview.viasat.com/about-us/"],
+  "plugins": []
+}

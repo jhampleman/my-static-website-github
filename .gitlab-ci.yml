@@ -1,0 +1,157 @@
+image: node:12
+
+stages:
+  - lint
+  - build
+  - test
+  - deploy staging
+  - staging tests
+  - deploy production
+  - production tests
+  - cache
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+  policy: pull
+
+update cache:
+  stage: cache
+  script:
+    - npm install
+  cache:
+      key: ${CI_COMMIT_REF_SLUG}
+      paths:
+        - node_modules/
+      policy: push
+  only:
+    - schedules
+
+eslint:
+  stage: lint
+  image: node:10-alpine
+  script:
+    - npm ci
+    - npx eslint --format gitlab ./myfirsttest.spec.js
+  artifacts:
+    reports:
+      codequality: gl-codequality.json
+  rules:
+    - allow_failure: true
+
+build website:
+  stage: build
+  script:
+    - echo $CI_COMMIT_SHORT_SHA
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby build
+    - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
+  artifacts:
+    paths:
+      - ./public
+  except:
+    - schedules  
+
+test artifact:
+  image: alpine
+  stage: test
+  cache: {}
+  script:
+    - grep -q "Jason" ./public/index.html
+  except:
+    - schedules  
+
+test website local:
+  stage: test
+  script:
+    - npm install
+    - npm install -g gatsby-cli
+    - gatsby serve &
+    - sleep 10
+    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
+  except:
+    - schedules
+  
+# Need to have a GitLab Runner installed for this.
+selenium tests:
+  stage: test
+  tags: 
+    - aem
+  script:
+    - cd ~/udemy/gatsby-site/static-website
+    - selenium-side-runner -c "goog:chromeOptions.args=[--headless,--nogpu] browserName=chrome" test_proj.side
+
+sonarqube tests:
+  stage: test
+  tags:
+    - aem
+  script:
+    - cd ~/udemy/gatsby-site/static-website
+    - ~/udemy/gatsby-site/static-website/sonar-scanner-4.4.0.2170-macosx/bin/sonar-scanner -Dsonar.projectKey=aem2 -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=482c3d360e6be7c36ce954587dc9b0517da971f6 -Dsonar.coverage.jacoco.xmlReportPaths=results.xml
+
+mocha tests:
+  stage: test
+  tags:
+    - aem
+  script:
+    - cd ~/udemy/gatsby-site/static-website
+    - npm install
+    - npm test
+
+deploy staging:
+  stage: deploy staging
+  environment:
+    url: http://$STAGE_URL
+    name: staging
+  only:
+    - master
+    - pre-viasat
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain $STAGE_URL
+  except:
+    - schedules
+
+staging tests:
+  image: alpine
+  stage: staging tests
+  cache: {}
+  only:
+    - master
+    - pre-viasat
+  script:
+    - apk add curl
+    - curl "http://$STAGE_URL" | tac | tac | grep -q "Jason"
+  except:
+   - schedules
+
+deploy production:
+  stage: deploy production
+  environment:
+    url: http://$PROD_URL
+    name: production
+  only:
+    - master
+    - pre-viasat
+  when: manual
+  allow_failure: false
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain $PROD_URL
+  except:
+    - schedules
+
+production tests:
+  image: alpine
+  stage: production tests
+  cache: {}
+  only:
+    - master
+    - pre-viasat
+  script:
+    - apk add curl
+    - curl "http://$PROD_URL" | tac | tac | grep -q "Gatsby"
+  except:
+   - schedules
