@@ -13,7 +13,7 @@ Kick off your project with this default boilerplate. This starter ships with the
 _Have another more specific idea? You may want to check out our vibrant collection of [official and community-created starters](https://www.gatsbyjs.com/docs/gatsby-starters/)._
 
 ## 🚀 Quick start
-## READ ME - Back to Master Test - 4:13p on 9/1
+## READ ME - Github test 12:49p
 1.  **Create a Gatsby site.**
 
     Use the Gatsby CLI to create a new site, specifying the default starter.
