@@ -12,37 +12,11 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains jobs like "build"
-  lint:
+  build:
     runs-on: ubuntu-latest
     steps:
-    
-      - name: Run ESLint
-  # You may pin to the exact commit or the version.
-  # uses: stefanoeb/eslint-action@0b532bcd98dbed80a59071fa8986fcf1b1715be4
-        uses: stefanoeb/eslint-action@1.0.2
-        with:
-    # Blob of files to lint
-          files: ./myfirsttest.spec.js
-  
-  build:
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-
-      # Runs a single command using the runners shell
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
-
-      # Runs a set of commands using the runners shell
-      - name: Install Dependencies
-        run: |
-          npm install
-          npm install -g gatsby-cli
-          gatsby serve &
-          sleep 10
-          curl "http://localhost:9000" | grep -q "Gatsby"
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: yarn
+    - name: Run ESLint
+      run: eslint . --ext .js,.jsx,.ts,.tsx
