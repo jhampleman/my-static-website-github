@@ -12,23 +12,14 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
-    name: Run ESLint
+  eslint:
     runs-on: ubuntu-latest
     steps:
-      
-      # Check out the repository
-      - uses: actions/checkout@v1
-
-      # Install Node.js
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: hallee/eslint-action@1.0.3
+        # GITHUB_TOKEN in forked repositories is read-only
+        # https://help.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-event-pull_request
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }} 
         with:
-          node-version: 12
-
-      # Install your dependencies
-      - run: npm ci
-
-      # Run ESLint using latest action
-      - uses: eslint/github-action@draft
-        env:
-          ESLINT_DRAFT: 1
+          repo-token: ${{secrets.GITHUB_TOKEN}}
+          source-root: optional-sub-dir
