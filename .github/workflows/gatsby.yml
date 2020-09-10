@@ -23,6 +23,7 @@ jobs:
     # A personal access token needed to push your site after it has been built.
   deploy:
     runs-on: ubuntu-latest
+    steps:
     - uses: actions/download-artifact@v2
     - needs: build
       with:
