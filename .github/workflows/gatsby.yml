@@ -21,3 +21,7 @@ jobs:
       with:
     # A personal access token needed to push your site after it has been built.
         access-token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/download-artifact@v2
+      with:
+        name: gatsby-source
+        path: ./public
