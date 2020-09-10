@@ -1,11 +1,20 @@
-name: ESLint
-on: push
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install modules
-      run: yarn
-    - name: Run ESLint
-      run: ./node_modules/.bin/eslint ./myfirsttest.spec.js
+# This is a basic workflow to help you get started with Actions
+
+name: Gatsby Workflow
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master and develop branch
+on:
+  push:
+    branches:
+      - develop
+
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+    # You may pin to the exact commit or the version.
+    # uses: enriikke/gatsby-gh-pages-action@854578ae3c66828334442d16ef54ef814f3a410a
+    uses: enriikke/gatsby-gh-pages-action@v2.1.1
+    with:
+      # A personal access token needed to push your site after it has been built.
+      access-token: ${{ secrets.GITHUB_TOKEN }}
