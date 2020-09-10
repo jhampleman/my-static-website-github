@@ -18,12 +18,12 @@ jobs:
     - uses: enriikke/gatsby-gh-pages-action@v2
       with:
         access-token: ${{ secrets.GITHUB_TOKEN }}
-        
+
   deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/download-artifact@v2
-    - needs: build
+      needs: build
       with:
         name: gatsby-source
         path: ./public
