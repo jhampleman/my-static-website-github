@@ -19,9 +19,12 @@ jobs:
     - uses: actions/checkout@v1
     - uses: enriikke/gatsby-gh-pages-action@v2
       with:
-    # A personal access token needed to push your site after it has been built.
         access-token: ${{ secrets.GITHUB_TOKEN }}
+    # A personal access token needed to push your site after it has been built.
+  deploy:
+    runs-on: ubuntu-latest
     - uses: actions/download-artifact@v2
+    - needs: build
       with:
         name: gatsby-source
         path: ./public
